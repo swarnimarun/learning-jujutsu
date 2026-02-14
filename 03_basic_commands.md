@@ -1,79 +1,59 @@
-# basic jj commands
+# 03 Basic Commands and Concepts
 
-## git clone
+## Core ideas
 
-You can just git clone directly,
+- Working copy is represented as a real commit.
+- Rewriting history is normal in jj.
+- Bookmarks are jj's movable named pointers (similar role to Git branches).
+- Operations are separate from commits and enable reliable recovery.
 
-```bash
-jj git clone <url>
-```
-
-## commits/changes and revsets
-
-> Note: In `jj` all changes are labelled and called a changeset which can be converted to commits.
-
-Update the description of the current changes, and then create a new changeset.
-
-Essentially this takes the current tracked changes makes a commit and then creates a new changeset.
+## Daily essentials
 
 ```bash
-jj commit
+jj status            # workspace summary
+jj log               # commit graph
+
+jj diff              # working-copy changes
+
+jj new               # create a new empty commit on top of <current> commit
+jj new x             # create a new empty commit on top of <x> commit
+
+jj describe -m "..." # set or edit commit message
+jj commit -m "..."   # finalize current changes and create next working commit
+
+jj edit <rev>        # make an existing revision current for editing
+
+jj squash            # fold current change into parent
+jj split             # split one commit into multiple commits
+
+jj rebase -s <rev> -d <dest>  # move commits
 ```
 
-## untrack
-
-All changes are tracked by default you can untrack specific files manually though which is awesome.
+## Bookmark basics
 
 ```bash
-jj file untrack "<path>"
+jj bookmark list
 
-jj file track "<path>"
+# -r @ sets the revision for which to create the bookmark, @ is the current revision, you can also use the revision id
+jj bookmark create my-feature -r @
+
+jj bookmark move my-feature --to @ # move the bookmark to the @ revision, allows us to change the revision for the branch
+
+jj bookmark track my-feature --remote=origin
 ```
 
-## bookmark(s)
-
-Bookmarks are like branches for jj.
+## Git remote sync
 
 ```bash
-jj bookmark
+jj git fetch --remote origin
+jj git push # push everything
+jj git push --bookmark my-feature # push just a specific bookmark
 ```
 
-## git pull ??
+## Avoid old commands
 
-You generally don't need git pull.
+- Do not use `jj checkout` (removed).
+- Do not use `jj merge` (removed).
+- Do not use `jj init --git` (removed).
 
-## git push
-
-Push will create a new target branch if you use the flag `--allow-new`.
-
-```bash
-jj git push
-```
-
-## status
-
-Get the status of the changes for the project.
-
-```bash
-jj st
-```
-
-## logs
-
-jj provides quite a lot of types of logs. Which provide quite a lot of insight into your vcs.
-
-```bash
-jj log
-
-jj evolog # log about the evolution of code
-
-jj op log # these are related to op log
-```
-
-## workspace
-
-TODO
-
-## restore/resolve/conflicts/fix
-
-TODO
+Use `jj new`, `jj edit`, and `jj git init` instead.

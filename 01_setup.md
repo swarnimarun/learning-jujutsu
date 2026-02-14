@@ -1,58 +1,45 @@
-# setting up jujutsu
+# 01 Setup
 
-## basic info and default command
+## Install
 
-Setup basic config at path, `jj config path --user`
+Install `jj` from the official release binaries or package manager:
 
-```toml
-[user]
-name = "<Your-Name>"
-email = "<Your-Email>"
+- Docs: https://docs.jj-vcs.dev/latest/install-and-setup/
+- Releases: https://github.com/jj-vcs/jj/releases
 
-[ui]
-default-command = "log" # I recommend either st or log as default command
+## Configure identity
+
+```bash
+jj config set --user user.name "Your Name"
+jj config set --user user.email "you@example.com"
 ```
 
-The log command is used to log the list of changes.
-The st or status command is used to get the current changeset.
+## Start a repo
 
-## fixing ssh to work correctly (requires atleast v0.26)
+Create a new Git-backed repo:
 
-Often your ssh will just not work with jj this is cause jj uses libssh2 which doesn't load the `~/.ssh/config`.
-
-To fix I recommend using git subprocess config so that local git cli is used.
-
-```toml
-[git]
-subprocess = true
+```bash
+jj git init my-repo
+cd my-repo
 ```
 
-## gpg signing with your keys
+Or clone an existing Git remote:
 
-Setup signing this is fairly easy to do, you can even copy paste your git config and change the field names.
-
-```toml
-[signing]
-behavior = "own"
-backend = "gpg"
-key = "<Key-you-want-to-use>"
+```bash
+jj git clone https://github.com/<org>/<repo>.git
+cd <repo>
 ```
 
-# Final Configuration
+## Verify install and repo state
 
-```toml
-[user]
-name = "<your name>"
-email = "<your email>"
-
-[ui]
-default-command = "log" # I recommend either st or log as default command
-
-[git]
-subprocess = true
-
-[signing]
-behavior = "own"
-backend = "gpg"
-key = "<your-gpg-key>"
+```bash
+jj --version
+jj status
+jj log
 ```
+
+## Notes for modern jj
+
+- `jj git init` replaces old `jj init --git`.
+- Colocated Git repos are the default in modern jj releases.
+- `jj` has an operation log, so most mistakes are recoverable (`jj undo`, `jj op log`, `jj op restore`).
